@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import Image from 'next/image';
 import { Card } from '@/shared/componentes/Card';
 import { Pelicula } from '../tipos';
@@ -13,7 +14,8 @@ export function PeliculaCard({ pelicula }: PeliculaCardProps) {
   const imageUrl = `${API_CONFIG.IMAGE_BASE_URL}/w500${pelicula.poster_path}`;
 
   return (
-    <Card className="group relative h-[450px] w-full">
+    <Link href={`/pelicula/${pelicula.id}`} className="block h-[450px] w-full">
+    <Card className="group relative h-full w-full border-transparent hover:border-white/10 transition-colors">
       <div className="absolute inset-0">
         <Image
           src={imageUrl}
@@ -47,5 +49,6 @@ export function PeliculaCard({ pelicula }: PeliculaCardProps) {
         </p>
       </div>
     </Card>
+    </Link>
   );
 }

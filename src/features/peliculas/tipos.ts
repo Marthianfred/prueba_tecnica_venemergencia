@@ -6,7 +6,8 @@ export interface Pelicula {
   backdrop_path: string;
   release_date: string;
   vote_average: number;
-  genre_ids: number[];
+  genre_ids?: number[]; // En lista
+  genres?: { id: number; name: string }[]; // En detalle
 }
 
 export interface ApiResponsePaginated<T> {
