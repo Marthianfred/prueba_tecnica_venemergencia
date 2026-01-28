@@ -46,11 +46,18 @@ export function BuscadorPeliculas({
             <input
               type="number"
               min="1900"
-              max="2030"
+              max={endYear || "2030"} // No permitir superar el año fin
               placeholder="Año Inicio"
               className="w-32 pl-10 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:ring-2 focus:ring-indigo-500 transition-all outline-none"
               value={startYear}
-              onChange={(e) => onStartYearChange(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value;
+                onStartYearChange(val);
+                // Si startYear supera endYear, limpiar o ajustar endYear (lógica en el padre o aquí visualmente)
+                if (endYear && val > endYear && val.length === 4) {
+                   onEndYearChange(val); // Auto-ajustar endYear para que sea igual al start
+                }
+              }}
             />
           </div>
 
@@ -60,12 +67,18 @@ export function BuscadorPeliculas({
             </div>
             <input
               type="number"
-              min="1900"
+              min={startYear || "1900"} // No permitir menor al año inicio
               max="2030"
               placeholder="Año Fin"
               className="w-32 pl-10 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:ring-2 focus:ring-indigo-500 transition-all outline-none"
               value={endYear}
-              onChange={(e) => onEndYearChange(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value;
+                onEndYearChange(val);
+                if (startYear && val < startYear && val.length === 4) {
+                    onStartYearChange(val); // Auto-ajustar startYear hacia abajo
+                }
+              }}
             />
           </div>
         </div>
