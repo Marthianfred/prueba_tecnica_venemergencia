@@ -1,5 +1,11 @@
 import { fetcher } from "@/shared/servicios/api-cliente";
-import { ApiResponsePaginated, Pelicula, Genero, Reparto } from "../tipos";
+import {
+  ApiResponsePaginated,
+  Pelicula,
+  Genero,
+  Reparto,
+  Actor,
+} from "../tipos";
 
 export const peliculasServicio = {
   // 1. Películas en Tendencia (Semana)
@@ -58,5 +64,14 @@ export const peliculasServicio = {
 
   getCreditos: async (movieId: number): Promise<{ cast: Reparto[] }> => {
     return fetcher<{ cast: Reparto[] }>(`/movie/${movieId}/credits`);
+  },
+
+  // 6. Datos del Actor y Filmografía
+  getActorDetalle: async (personId: number): Promise<Actor> => {
+    return fetcher<Actor>(`/person/${personId}`);
+  },
+
+  getActorCreditos: async (personId: number): Promise<{ cast: Pelicula[] }> => {
+    return fetcher<{ cast: Pelicula[] }>(`/person/${personId}/movie_credits`);
   },
 };
