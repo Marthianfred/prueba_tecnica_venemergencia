@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# VeneMovieApp - Prueba Técnica Frontend
 
-## Getting Started
+Aplicación web moderna para exploración de películas utilizando la API de TMDB.
+Desarrollada con **Next.js 16**, **TypeScript**, **Tailwind CSS** y **TanStack Query**.
 
-First, run the development server:
+## 🚀 Tecnologías
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Framework**: Next.js 16 (App Router)
+- **Lenguaje**: TypeScript 5+
+- **Estilos**: Tailwind CSS 3.4
+- **Estado Asíncrono**: TanStack Query (React Query) v5
+- **Testing**: Vitest + React Testing Library
+- **Iconos**: Lucide React
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📋 Requisitos para Ejecutar
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Variables de Entorno**:
+   Copiar `.env.example` a `.env.local` y agregar tu API KEY de TMDB.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   ```bash
+   cp .env.example .env.local
+   # Editar NEXT_PUBLIC_API_KEY=tu_api_key
+   ```
 
-## Learn More
+2. **Instalar Dependencias**:
 
-To learn more about Next.js, take a look at the following resources:
+   ```bash
+   npm install
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. **Correr en Desarrollo**:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   ```bash
+   npm run dev
+   ```
 
-## Deploy on Vercel
+4. **Docker (Opcional)**:
+   ```bash
+   docker-compose up --build
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🏗 Arquitectura y Decisiones Técnicas
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Vertical Slice Architecture (VSA)
+
+Se adoptó una arquitectura basada en **features** en lugar de capas horizontales tradicionales.
+
+- `src/features/peliculas`: Contiene toda la lógica relacionada con películas (componentes, hooks, servicios, tipos).
+- `src/shared`: Kernel compartido con utilidades genéricas (Cliente API, Componentes base UI).
+
+### Manejo de Estado
+
+- **Server State**: Gestionado con TanStack Query para caché, revalidación y manejo de errores (loading, error states).
+- **URL State**: Los filtros (búsqueda, año, género) se mantienen en el estado local del componente filtrado para reactividad instantánea, aunque idealmente se sincronizarían con la URL para compartir links.
+
+### Principios SOLID
+
+- **Single Responsibility**: Componentes pequeños y enfocados (e.g., `PeliculaCard` solo renderiza, `UsePeliculasFiltradas` solo gestiona lógica de fetch).
+- **Interface Segregation**: Tipos de TypeScript estrictos para las respuestas de la API (`Pelicula`, `Actor`, etc.).
+
+## 🔍 Endpoints Implementados (TMDB)
+
+1. **Tendencias**: `/trending/movie/week` (Home Page)
+2. **Búsqueda**: `/search/movie` (Barra con Debounce)
+3. **Descubrimiento**: `/discover/movie` (Filtros de Fecha y Género)
+4. **Detalle**: `/movie/{id}` + `/credits`
+5. **Actor**: `/person/{id}` + `/movie_credits`
+6. **Géneros**: `/genre/movie/list`
+
+## ✅ Cobertura de Requisitos
+
+- [x] Home con Grid de Tendencias
+- [x] Buscador con Debounce
+- [x] Filtros combinados (Año + Género)
+- [x] Detalle de Película (Sinopsis, Cast, Runtime)
+- [x] Perfil de Actor (Bio + Filmografía)
+- [x] Diseño Responsivo y Premium (Glassmorphism)
+- [x] Dockerización
+
+---
+
+Desarrollado por [Tu Nombre/Usuario] para la Prueba Técnica.

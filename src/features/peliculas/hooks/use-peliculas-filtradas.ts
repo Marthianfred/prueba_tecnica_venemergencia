@@ -1,38 +1,54 @@
 import { useQuery } from "@tanstack/react-query";
 import { peliculasServicio } from "../servicios/peliculas.servicio";
 
+// Definimos una interfaz para los filtros con 'genreId' opcional
 interface Filtros {
   query: string;
   startYear?: string;
   endYear?: string;
-  page?: number;
+  genreId?: string;
+  page: number;
 }
 
-export function usePeliculasFiltradas(filtros: Filtros) {
+export function usePeliculasFiltradas({
+  query,
+  startYear,
+  endYear,
+  genreId,
+  page,
+}: Filtros) {
   return useQuery({
-    queryKey: ["peliculas", "filtradas", filtros],
+    queryKey: ["peliculas", query, startYear, endYear, genreId, page],
     queryFn: () => {
-      // 1. Si hay texto de búsqueda
-      if (filtros.query.trim()) {
+      // 3. (Fallback para casos raros, pero cubierto por 4)
+
+      // 1. Si hay Query -> endpoint /search
+      if (query) {
         return peliculasServicio.buscarPeliculas(
-          filtros.query,
-          filtros.page,
-          filtros.startYear,
-          filtros.endYear,
+          query,
+          page,
+          startYear,
+          endYear,
         );
       }
 
-      // 2. Si no hay texto pero hay filtros de fecha (Modo Descubrimiento)
-      if (filtros.startYear || filtros.endYear) {
-        return peliculasServicio.descubrirPeliculas(
-          filtros.page,
-          filtros.startYear,
-          filtros.endYear,
+      // 2. Si NO hay Query pero hay Genre -> endpoint /discover con genre (o reuse getPeliculasPorGenero)
+      if (genreId) {
+        return peliculasServicio.getPeliculasPorGenero(
+          Number(genreId),
+          page,
+          startYear,
+          endYear,
         );
       }
 
-      // 3. Por defecto: Tendencias (si no hay nada)
-      return peliculasServicio.getTendencias(filtros.page);
+      // 3. Si hay solo fechas (filtros Discover puros)
+      if (startYear || endYear) {
+        return peliculasServicio.descubrirPeliculas(page, startYear, endYear);
+      }
+
+      // 4. Default -> Trending
+      return peliculasServicio.getTendencias(page);
     },
     // Mantener datos anteriores mientras carga los nuevos para mejor UX
     placeholderData: (previousData) => previousData,

@@ -94,6 +94,11 @@ export default function PaginaDetallePelicula() {
                 <span className="flex items-center gap-1">
                   <Calendar size={16} /> {new Date(detalle.release_date).getFullYear()}
                 </span>
+                {detalle.runtime && (
+                   <span className="flex items-center gap-1 items-center gap-1 px-2 py-1 bg-white/5 rounded-md border border-white/10 text-xs text-white/70">
+                     <Clock size={14} /> {detalle.runtime} min
+                   </span>
+                )}
                 <div className="flex gap-2 flex-wrap">
                   {detalle.genres?.map((genre) => (
                     <span key={genre.id} className="px-3 py-1 bg-white/5 rounded-full border border-white/10 text-xs text-white/70">

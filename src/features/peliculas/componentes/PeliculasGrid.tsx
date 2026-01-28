@@ -8,27 +8,36 @@ import { useDebounce } from '@/shared/hooks/use-debounce';
 import { Button } from '@/shared/componentes/Button';
 
 export function PeliculasGrid() {
+  // Estado local para los filtros
   const [query, setQuery] = useState('');
+  const [genreId, setGenreId] = useState('');
   const [startYear, setStartYear] = useState('');
   const [endYear, setEndYear] = useState('');
   const [page, setPage] = useState(1);
 
+  // Debounce (solo para query, dates y genre)
   const debouncedQuery = useDebounce(query, 500);
   const debouncedStartYear = useDebounce(startYear, 500);
   const debouncedEndYear = useDebounce(endYear, 500);
+  // Genre se puede debouncear o no, mejor sí para consistencia si user cambia rápido
+  const debouncedGenreId = useDebounce(genreId, 500);
+
   const handleQueryChange = (val: string) => { setQuery(val); setPage(1); };
   const handleStartYearChange = (val: string) => { setStartYear(val); setPage(1); };
   const handleEndYearChange = (val: string) => { setEndYear(val); setPage(1); };
+  const handleGenreChange = (val: string) => { setGenreId(val); setPage(1); };
 
   const { data, isLoading, isError, error, isFetching } = usePeliculasFiltradas({
     query: debouncedQuery,
     startYear: debouncedStartYear,
     endYear: debouncedEndYear,
+    genreId: debouncedGenreId,
     page: page
   });
 
   const getTitle = () => {
     if (debouncedQuery) return `Resultados para "${debouncedQuery}"`;
+    if (debouncedGenreId) return 'Películas Filtradas por Género';
     if (debouncedStartYear || debouncedEndYear) return 'Películas Filtradas';
     return 'Películas en Tendencia';
   };
@@ -43,6 +52,8 @@ export function PeliculasGrid() {
         onStartYearChange={handleStartYearChange}
         endYear={endYear}
         onEndYearChange={handleEndYearChange}
+        genreId={genreId}
+        onGenreChange={handleGenreChange}
       />
 
       {/* Header de la sección */}

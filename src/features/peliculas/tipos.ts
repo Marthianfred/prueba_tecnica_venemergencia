@@ -6,6 +6,7 @@ export interface Pelicula {
   backdrop_path: string;
   release_date: string;
   vote_average: number;
+  runtime?: number; // Duración en minutos
   genre_ids?: number[];
   genres?: { id: number; name: string }[];
 }
