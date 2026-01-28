@@ -8,23 +8,18 @@ import { useDebounce } from '@/shared/hooks/use-debounce';
 import { Button } from '@/shared/componentes/Button';
 
 export function PeliculasGrid() {
-  // Estado local para los filtros
   const [query, setQuery] = useState('');
   const [startYear, setStartYear] = useState('');
   const [endYear, setEndYear] = useState('');
   const [page, setPage] = useState(1);
 
-  // Debounce solo para el texto de búsqueda (500ms)
   const debouncedQuery = useDebounce(query, 500);
   const debouncedStartYear = useDebounce(startYear, 500);
   const debouncedEndYear = useDebounce(endYear, 500);
-
-  // Resetear página al cambiar filtros
   const handleQueryChange = (val: string) => { setQuery(val); setPage(1); };
   const handleStartYearChange = (val: string) => { setStartYear(val); setPage(1); };
   const handleEndYearChange = (val: string) => { setEndYear(val); setPage(1); };
 
-  // Hook inteligente
   const { data, isLoading, isError, error, isFetching } = usePeliculasFiltradas({
     query: debouncedQuery,
     startYear: debouncedStartYear,
@@ -32,7 +27,6 @@ export function PeliculasGrid() {
     page: page
   });
 
-  // Título dinámico
   const getTitle = () => {
     if (debouncedQuery) return `Resultados para "${debouncedQuery}"`;
     if (debouncedStartYear || debouncedEndYear) return 'Películas Filtradas';
