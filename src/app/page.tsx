@@ -27,7 +27,7 @@ export default function Home() {
       <footer className="border-t border-white/5 py-10 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <p className="text-white/40 text-sm">
-            © 2026 VeneMovieApp. Desarrollado por <span className="text-white/60 font-semibold">Marthianfred</span>.
+            © 2026 VeneMovieApp. Desarrollado por <span className="text-white/60 font-semibold">Freddy Campos</span>.
           </p>
           <div className="flex items-center gap-6">
             <span className="text-white/40 text-sm font-medium">Data provided by TMDB</span>

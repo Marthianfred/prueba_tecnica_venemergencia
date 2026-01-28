@@ -32,11 +32,11 @@ export function PeliculaCard({ pelicula }: PeliculaCardProps) {
       {/* Contenido */}
       <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-4 transition-transform duration-300 group-hover:translate-y-0">
         <div className="flex items-center gap-2 mb-2">
-          <span className="px-2 py-1 rounded-md bg-yellow-500/20 text-yellow-500 text-xs font-bold backdrop-blur-md border border-yellow-500/30">
-            ★ {pelicula.vote_average.toFixed(1)}
+          <span className="px-2 py-1 rounded-md bg-yellow-500/20 text-yellow-500 text-xs font-bold backdrop-blur-md border border-yellow-500/20 flex items-center gap-1">
+            ★ {(pelicula.vote_average || 0).toFixed(1)}
           </span>
           <span className="text-white/60 text-xs">
-            {new Date(pelicula.release_date).getFullYear()}
+            {pelicula.release_date ? new Date(pelicula.release_date).getFullYear() : 'N/A'}
           </span>
         </div>
         
