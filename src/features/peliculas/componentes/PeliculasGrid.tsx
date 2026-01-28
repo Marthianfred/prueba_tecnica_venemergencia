@@ -59,34 +59,35 @@ export function PeliculasGrid() {
       />
 
       {/* Header de la sección y Toggle */}
-      <div className="flex flex-col md:flex-row justify-between items-end md:items-center gap-4 border-b border-white/10 pb-6">
-        <div>
-          <h2 className="text-3xl font-bold text-white mb-2 flex items-center gap-3">
-            <span className="w-1.5 h-8 bg-indigo-500 rounded-full" />
+      <div className="border-b border-white/10 pb-6">
+        <div className="flex flex-row justify-between items-center gap-4 mb-2">
+          <h2 className="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
+            <span className="w-1.5 h-6 md:h-8 bg-indigo-500 rounded-full" />
             {getTitle()}
           </h2>
-          <p className="text-white/60 ml-4">
-            {isFetching ? 'Actualizando resultados...' : 'Descubre las mejores historias del cine'}
-          </p>
+          
+          {/* Toggle Grid/List */}
+          <div className="flex items-center bg-white/5 rounded-lg p-1 border border-white/10 shrink-0">
+            <button
+              onClick={() => setViewMode('grid')}
+              className={`p-1.5 md:p-2 rounded-md transition-all ${viewMode === 'grid' ? 'bg-indigo-500 text-white shadow-lg' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+              title="Vista Cuadrícula"
+            >
+              <LayoutGrid size={18} />
+            </button>
+            <button
+              onClick={() => setViewMode('list')}
+              className={`p-1.5 md:p-2 rounded-md transition-all ${viewMode === 'list' ? 'bg-indigo-500 text-white shadow-lg' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+              title="Vista Lista"
+            >
+              <List size={18} />
+            </button>
+          </div>
         </div>
         
-        {/* Toggle Grid/List */}
-        <div className="flex items-center bg-white/5 rounded-lg p-1 border border-white/10">
-          <button
-            onClick={() => setViewMode('grid')}
-            className={`p-2 rounded-md transition-all ${viewMode === 'grid' ? 'bg-indigo-500 text-white shadow-lg' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
-            title="Vista Cuadrícula"
-          >
-            <LayoutGrid size={20} />
-          </button>
-          <button
-            onClick={() => setViewMode('list')}
-            className={`p-2 rounded-md transition-all ${viewMode === 'list' ? 'bg-indigo-500 text-white shadow-lg' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
-            title="Vista Lista"
-          >
-            <List size={20} />
-          </button>
-        </div>
+        <p className="text-white/60 ml-4 text-sm md:text-base">
+          {isFetching ? 'Actualizando resultados...' : 'Descubre las mejores historias del cine'}
+        </p>
       </div>
 
       {/* Estado Carga Inicial */}
