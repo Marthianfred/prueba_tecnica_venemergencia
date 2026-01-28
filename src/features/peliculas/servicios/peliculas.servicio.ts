@@ -7,11 +7,14 @@ import {
   Actor,
 } from "../tipos";
 
+const LANG = "&language=es-ES"; // Constante para idioma
+const LANG_Q = "?language=es-ES"; // Para endpoints sin params previos
+
 export const peliculasServicio = {
   // 1. Películas en Tendencia (Semana)
   getTendencias: async (page = 1): Promise<ApiResponsePaginated<Pelicula>> => {
     return fetcher<ApiResponsePaginated<Pelicula>>(
-      `/trending/movie/week?page=${page}`,
+      `/trending/movie/week${LANG_Q}&page=${page}`,
     );
   },
 
@@ -22,7 +25,7 @@ export const peliculasServicio = {
     startYear?: string,
     endYear?: string,
   ): Promise<ApiResponsePaginated<Pelicula>> => {
-    let endpoint = `/search/movie?query=${encodeURIComponent(query)}&page=${page}`;
+    let endpoint = `/search/movie${LANG_Q}&query=${encodeURIComponent(query)}&page=${page}`;
     if (startYear) endpoint += `&primary_release_date.gte=${startYear}-01-01`;
     if (endYear) endpoint += `&primary_release_date.lte=${endYear}-12-31`;
     return fetcher<ApiResponsePaginated<Pelicula>>(endpoint);
@@ -34,7 +37,7 @@ export const peliculasServicio = {
     startYear?: string,
     endYear?: string,
   ): Promise<ApiResponsePaginated<Pelicula>> => {
-    let endpoint = `/discover/movie?sort_by=popularity.desc&page=${page}`;
+    let endpoint = `/discover/movie${LANG_Q}&sort_by=popularity.desc&page=${page}`;
     if (startYear) endpoint += `&primary_release_date.gte=${startYear}-01-01`;
     if (endYear) endpoint += `&primary_release_date.lte=${endYear}-12-31`;
     return fetcher<ApiResponsePaginated<Pelicula>>(endpoint);
@@ -42,7 +45,7 @@ export const peliculasServicio = {
 
   // 4. Filtrado por Género
   getGeneros: async (): Promise<{ genres: Genero[] }> => {
-    return fetcher<{ genres: Genero[] }>("/genre/movie/list");
+    return fetcher<{ genres: Genero[] }>(`/genre/movie/list${LANG_Q}`);
   },
 
   getPeliculasPorGenero: async (
@@ -51,7 +54,7 @@ export const peliculasServicio = {
     startYear?: string,
     endYear?: string,
   ): Promise<ApiResponsePaginated<Pelicula>> => {
-    let endpoint = `/discover/movie?with_genres=${genreId}&page=${page}`;
+    let endpoint = `/discover/movie${LANG_Q}&with_genres=${genreId}&page=${page}`;
     if (startYear) endpoint += `&primary_release_date.gte=${startYear}-01-01`;
     if (endYear) endpoint += `&primary_release_date.lte=${endYear}-12-31`;
     return fetcher<ApiResponsePaginated<Pelicula>>(endpoint);
@@ -59,19 +62,21 @@ export const peliculasServicio = {
 
   // 5. Detalle de Película y Reparto
   getDetalle: async (movieId: number): Promise<Pelicula> => {
-    return fetcher<Pelicula>(`/movie/${movieId}`);
+    return fetcher<Pelicula>(`/movie/${movieId}${LANG_Q}`);
   },
 
   getCreditos: async (movieId: number): Promise<{ cast: Reparto[] }> => {
-    return fetcher<{ cast: Reparto[] }>(`/movie/${movieId}/credits`);
+    return fetcher<{ cast: Reparto[] }>(`/movie/${movieId}/credits${LANG_Q}`);
   },
 
   // 6. Datos del Actor y Filmografía
   getActorDetalle: async (personId: number): Promise<Actor> => {
-    return fetcher<Actor>(`/person/${personId}`);
+    return fetcher<Actor>(`/person/${personId}${LANG_Q}`);
   },
 
   getActorCreditos: async (personId: number): Promise<{ cast: Pelicula[] }> => {
-    return fetcher<{ cast: Pelicula[] }>(`/person/${personId}/movie_credits`);
+    return fetcher<{ cast: Pelicula[] }>(
+      `/person/${personId}/movie_credits${LANG_Q}`,
+    );
   },
 };
