@@ -15,10 +15,10 @@ Desarrollada con **Next.js 16**, **TypeScript**, **Tailwind CSS** y **TanStack Q
 ## 📋 Requisitos para Ejecutar
 
 1. **Variables de Entorno**:
-   Copiar `.env.example` a `.env.local` y agregar tu API KEY de TMDB.
+   Copiar `.env.example` a `.env` y agregar tu API KEY de TMDB.
 
    ```bash
-   cp .env.example .env.local
+   cp .env.example .env
    # Editar NEXT_PUBLIC_API_KEY=tu_api_key
    ```
 
