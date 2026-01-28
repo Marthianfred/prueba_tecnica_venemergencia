@@ -20,16 +20,6 @@ export default function Home() {
 
       {/* Main Content */}
       <section className="max-w-7xl mx-auto px-6 pb-20">
-        <div className="flex items-center justify-between mb-10">
-          <div className="flex items-center gap-3">
-            <div className="w-2 h-8 bg-indigo-600 rounded-full" />
-            <h2 className="text-2xl font-bold tracking-tight">Películas en Tendencia</h2>
-          </div>
-          <div className="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm text-white/60 font-medium">
-            Actualizado hoy
-          </div>
-        </div>
-
         <PeliculasGrid />
       </section>
 
