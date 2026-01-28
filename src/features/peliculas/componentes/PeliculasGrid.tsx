@@ -6,14 +6,16 @@ import { PeliculaCard } from './PeliculaCard';
 import { BuscadorPeliculas } from './BuscadorPeliculas';
 import { useDebounce } from '@/shared/hooks/use-debounce';
 import { Button } from '@/shared/componentes/Button';
+import { LayoutGrid, List } from 'lucide-react'; // Importar iconos
 
 export function PeliculasGrid() {
-  // Estado local para los filtros
+  // Estado local para los filtros y vista
   const [query, setQuery] = useState('');
   const [genreId, setGenreId] = useState('');
   const [startYear, setStartYear] = useState('');
   const [endYear, setEndYear] = useState('');
   const [page, setPage] = useState(1);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid'); // Estado de vista
 
   // Debounce (solo para query, dates y genre)
   const debouncedQuery = useDebounce(query, 500);
@@ -56,47 +58,62 @@ export function PeliculasGrid() {
         onGenreChange={handleGenreChange}
       />
 
-      {/* Header de la sección */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-2 h-8 bg-indigo-600 rounded-full" />
-          <h2 className="text-2xl font-bold tracking-tight">{getTitle()}</h2>
+      {/* Header de la sección y Toggle */}
+      <div className="flex flex-col md:flex-row justify-between items-end md:items-center gap-4 border-b border-white/10 pb-6">
+        <div>
+          <h2 className="text-3xl font-bold text-white mb-2 flex items-center gap-3">
+            <span className="w-1.5 h-8 bg-indigo-500 rounded-full" />
+            {getTitle()}
+          </h2>
+          <p className="text-white/60 ml-4">
+            {isFetching ? 'Actualizando resultados...' : 'Descubre las mejores historias del cine'}
+          </p>
         </div>
-        {isFetching && (
-          <div className="px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-sm text-indigo-400 font-medium animate-pulse">
-            Actualizando...
-          </div>
-        )}
+        
+        {/* Toggle Grid/List */}
+        <div className="flex items-center bg-white/5 rounded-lg p-1 border border-white/10">
+          <button
+            onClick={() => setViewMode('grid')}
+            className={`p-2 rounded-md transition-all ${viewMode === 'grid' ? 'bg-indigo-500 text-white shadow-lg' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+            title="Vista Cuadrícula"
+          >
+            <LayoutGrid size={20} />
+          </button>
+          <button
+            onClick={() => setViewMode('list')}
+            className={`p-2 rounded-md transition-all ${viewMode === 'list' ? 'bg-indigo-500 text-white shadow-lg' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+            title="Vista Lista"
+          >
+            <List size={20} />
+          </button>
+        </div>
       </div>
 
       {/* Estado Carga Inicial */}
-      {isLoading && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-          {[...Array(10)].map((_, i) => (
-            <div key={i} className="h-[450px] w-full rounded-2xl bg-white/5 animate-pulse" />
+      {isLoading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="h-[450px] bg-white/5 rounded-xl animate-pulse" />
           ))}
         </div>
-      )}
-
-      {/* Estado Error */}
-      {isError && (
-        <div className="flex flex-col items-center justify-center py-20 bg-red-500/10 rounded-2xl border border-red-500/20">
-          <p className="text-red-500 font-medium">Error al cargar películas</p>
-          <p className="text-white/60 text-sm mt-2">{(error as Error).message}</p>
+      ) : isError ? (
+        <div className="text-center py-20 bg-red-500/10 rounded-2xl border border-red-500/20">
+          <p className="text-red-400 mb-2">Error al cargar películas</p>
+          <Button onClick={() => window.location.reload()} variant="outline">Reintentar</Button>
         </div>
-      )}
-
-      {/* Grid de Resultados */}
-      {!isLoading && !isError && (
+      ) : (
         <>
           {data?.results.length === 0 ? (
             <div className="text-center py-20 text-white/40">
               No se encontraron películas con estos criterios.
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+            <div className={viewMode === 'grid' 
+              ? "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" 
+              : "flex flex-col gap-4"
+            }>
               {data?.results.map((pelicula) => (
-                <PeliculaCard key={pelicula.id} pelicula={pelicula} />
+                <PeliculaCard key={pelicula.id} pelicula={pelicula} layout={viewMode} />
               ))}
             </div>
           )}
