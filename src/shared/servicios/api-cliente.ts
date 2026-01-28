@@ -4,11 +4,12 @@ export async function fetcher<T>(
   endpoint: string,
   options?: RequestInit,
 ): Promise<T> {
-  const url = `${API_CONFIG.BASE_URL}${endpoint}`;
+  // Asegurar que el endpoint tenga el separador correcto para query params
+  const separator = endpoint.includes("?") ? "&" : "?";
+  const url = `${API_CONFIG.BASE_URL}${endpoint}${separator}api_key=${API_CONFIG.API_KEY}`;
 
   const headers = {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_TOKEN}`,
     ...options?.headers,
   };
 

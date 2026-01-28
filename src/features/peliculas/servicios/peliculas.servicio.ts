@@ -1,8 +1,62 @@
 import { fetcher } from "@/shared/servicios/api-cliente";
-import { ApiResponseTrendig } from "../tipos";
+import { ApiResponsePaginated, Pelicula, Genero, Reparto } from "../tipos";
 
 export const peliculasServicio = {
-  getTendencias: async (): Promise<ApiResponseTrendig> => {
-    return fetcher<ApiResponseTrendig>("/trending/movie/day?language=es-ES");
+  // 1. Películas en Tendencia (Semana)
+  getTendencias: async (page = 1): Promise<ApiResponsePaginated<Pelicula>> => {
+    return fetcher<ApiResponsePaginated<Pelicula>>(
+      `/trending/movie/week?page=${page}`,
+    );
+  },
+
+  // 2. Búsqueda por Texto con filtros de fecha
+  buscarPeliculas: async (
+    query: string,
+    page = 1,
+    startYear?: string,
+    endYear?: string,
+  ): Promise<ApiResponsePaginated<Pelicula>> => {
+    let endpoint = `/search/movie?query=${encodeURIComponent(query)}&page=${page}`;
+    if (startYear) endpoint += `&primary_release_date.gte=${startYear}-01-01`;
+    if (endYear) endpoint += `&primary_release_date.lte=${endYear}-12-31`;
+    return fetcher<ApiResponsePaginated<Pelicula>>(endpoint);
+  },
+
+  // 3. Descubrimiento y Filtros
+  descubrirPeliculas: async (
+    page = 1,
+    startYear?: string,
+    endYear?: string,
+  ): Promise<ApiResponsePaginated<Pelicula>> => {
+    let endpoint = `/discover/movie?sort_by=popularity.desc&page=${page}`;
+    if (startYear) endpoint += `&primary_release_date.gte=${startYear}-01-01`;
+    if (endYear) endpoint += `&primary_release_date.lte=${endYear}-12-31`;
+    return fetcher<ApiResponsePaginated<Pelicula>>(endpoint);
+  },
+
+  // 4. Filtrado por Género
+  getGeneros: async (): Promise<{ genres: Genero[] }> => {
+    return fetcher<{ genres: Genero[] }>("/genre/movie/list");
+  },
+
+  getPeliculasPorGenero: async (
+    genreId: number,
+    page = 1,
+    startYear?: string,
+    endYear?: string,
+  ): Promise<ApiResponsePaginated<Pelicula>> => {
+    let endpoint = `/discover/movie?with_genres=${genreId}&page=${page}`;
+    if (startYear) endpoint += `&primary_release_date.gte=${startYear}-01-01`;
+    if (endYear) endpoint += `&primary_release_date.lte=${endYear}-12-31`;
+    return fetcher<ApiResponsePaginated<Pelicula>>(endpoint);
+  },
+
+  // 5. Detalle de Película y Reparto
+  getDetalle: async (movieId: number): Promise<Pelicula> => {
+    return fetcher<Pelicula>(`/movie/${movieId}`);
+  },
+
+  getCreditos: async (movieId: number): Promise<{ cast: Reparto[] }> => {
+    return fetcher<{ cast: Reparto[] }>(`/movie/${movieId}/credits`);
   },
 };
