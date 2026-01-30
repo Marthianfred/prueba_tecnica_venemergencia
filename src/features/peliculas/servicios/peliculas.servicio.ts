@@ -4,7 +4,7 @@ import {
   Pelicula,
   Genero,
   Reparto,
-  Actor,
+  Actor, Reviews,
 } from "../tipos";
 
 const LANG = "&language=es-ES"; // Constante para idioma
@@ -78,5 +78,10 @@ export const peliculasServicio = {
     return fetcher<{ cast: Pelicula[] }>(
       `/person/${personId}/movie_credits${LANG_Q}`,
     );
+  },
+
+  // 8. Obtener Reviews
+  getReviews: async (movieId: number): Promise<{ results: Reviews[]}> => {
+    return fetcher<{ results: Reviews[] }>(`/movie/${movieId}/reviews${LANG_Q}`);
   },
 };

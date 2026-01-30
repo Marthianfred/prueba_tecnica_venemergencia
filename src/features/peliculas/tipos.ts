@@ -11,6 +11,18 @@ export interface Pelicula {
   genres?: { id: number; name: string }[];
 }
 
+export interface Reviews {
+  id: number;
+  author: string;
+  content: string;
+  "author_details": {
+    "name": string,
+    "username": string,
+    "avatar_path": string,
+    "rating": number
+  },
+}
+
 export interface ApiResponsePaginated<T> {
   page: number;
   results: T[];
